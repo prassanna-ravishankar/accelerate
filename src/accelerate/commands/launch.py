@@ -799,6 +799,7 @@ def tpu_launcher(args):
         raise ValueError("--no_python cannot be used with TPU launcher")
 
     args, current_env = prepare_tpu(args, current_env)
+    print(f'Training function: {args.main_training_function}')
 
     if args.module:
         mod_name = args.training_script
