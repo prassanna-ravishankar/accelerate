@@ -836,7 +836,6 @@ def tpu_pod_launcher(args):
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
     args.positional = ["accelerate", "launch", "--tpu", "--no_tpu_cluster", training_script] + training_script_args
-    print(args.positional)
     bad_flags = ""
     for arg in vars(args):
         if arg.startswith("docker_"):
