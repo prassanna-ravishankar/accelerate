@@ -833,6 +833,7 @@ def tpu_pod_launcher(args):
     training_script = args.training_script
     training_script_args = args.training_script_args
     print(vars(args))
+    raise ValueError()
     args = _filter_args(
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
