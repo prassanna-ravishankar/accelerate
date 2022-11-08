@@ -837,6 +837,7 @@ def tpu_pod_launcher(args):
     )
 
     new_args.positional = ["accelerate", "launch", "--tpu", "--num_processes", args.num_processes, "--mixed_precision", args.mixed_precision, training_script] + training_script_args
+    print(new_args.positional)
     xrt_config = current_env.pop("XRT_TPU_CONFIG")
     bad_flags = ""
     for arg in vars(new_args):
