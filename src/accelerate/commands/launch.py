@@ -816,7 +816,7 @@ def tpu_launcher(args):
         )
 
     # Patch sys.argv
-    sys.argv = [mod.__file__] + args.training_script_args
+    sys.argv = [mod.__file__] + args.training_script_args + ["--tpu_num_cores", str(args.num_processes)]
 
     main_function = getattr(mod, args.main_training_function)
     with patch_environment(**current_env):
@@ -837,8 +837,7 @@ def tpu_pod_launcher(args):
     )
 
     new_args.positional = ["accelerate", "launch", "--tpu", "--num_processes", str(args.num_processes), "--mixed_precision", args.mixed_precision, "--main_training_function", args.main_training_function, training_script] + training_script_args
-    xrt_config = current_env["XRT_TPU_CONFIG"]
-    del current_env["XRT_TPU_CONFIG"]
+    xrt_config = current_env.pop("XRT_TPU_CONFIG")
     bad_flags = ""
     for arg in vars(new_args):
         if arg.startswith("docker_"):
