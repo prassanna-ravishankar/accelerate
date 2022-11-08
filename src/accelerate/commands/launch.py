@@ -836,7 +836,7 @@ def tpu_pod_launcher(args):
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
 
-    new_args.positional = ["python3", "-m", "accelerate.utils.xla_spawn", "--num_cores", str(args.num_processes), training_script] + training_script_args
+    new_args.positional = ["accelerate", "launch", training_script] + training_script_args
     xrt_config = current_env.pop("XRT_TPU_CONFIG")
     bad_flags = ""
     for arg in vars(new_args):
