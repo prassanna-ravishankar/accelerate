@@ -836,12 +836,12 @@ def tpu_pod_launcher(args):
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
     new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", "--tpu"]
-    keys = "mixed_precision,fp16,num_processes,num_cpu_threads_per_process,module,no_python,main_training_function,downcast_bf16"
+    keys = "mixed_precision,fp16,num_processes,module,no_python,main_training_function,downcast_bf16"
     for key in keys.split(","):
         value = getattr(args, key)
         if value is not None and value != False:
             new_args.positional.append(f"--{key}")
-            if value != True:
+            if not isinstance(value, bool):
                 new_args.positional.append(str(value))
 
     new_args.positional.append(training_script)
