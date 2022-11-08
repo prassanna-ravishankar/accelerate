@@ -809,8 +809,6 @@ def tpu_launcher(args):
         mod_name = script_path.stem
 
     mod = importlib.import_module(mod_name)
-    print(type(args.main_training_function))
-    raise ValueError()
     if not hasattr(mod, args.main_training_function):
         raise ValueError(
             f"Your training script should have a function named {args.main_training_function}, or you should pass a "
@@ -834,6 +832,7 @@ def tpu_pod_launcher(args):
 
     training_script = args.training_script
     training_script_args = args.training_script_args
+    print(vars(args))
     args = _filter_args(
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
@@ -857,6 +856,8 @@ def tpu_pod_launcher(args):
                 console = get_console()
                 console.print("\n[bold red]Using --debug, `torch_xla.xla_dist` Stack Trace:[/bold red]")
                 console.print_exception(suppress=[__file__], show_locals=False)
+            else:
+                raise
 
 
 def _convert_nargs_to_dict(nargs: List[str]) -> Dict[str, str]:
