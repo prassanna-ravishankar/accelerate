@@ -835,27 +835,29 @@ def tpu_pod_launcher(args):
     new_args = _filter_args(
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
-    new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", "--tpu"]
-    keys = "mixed_precision,fp16,num_processes,num_machines,module,no_python,main_training_function,downcast_bf16"
-    for key in keys.split(","):
-        value = getattr(args, key)
-        if value is not None and value != False:
-            new_args.positional.append(f"--{key}")
-            if not isinstance(value, bool):
-                new_args.positional.append(str(value))
+    new_args.positional = ["python3", training_script] + training_script_args
 
-    new_args.positional.append(training_script)
-    new_args.positional += training_script_args
-    bad_flags = ""
-    for arg in vars(new_args):
-        if arg.startswith("docker_"):
-            value = getattr(new_args, arg)
-            if value != "" and value is not None:
-                bad_flags += f'{arg}="{value}"\n'
-    if bad_flags != "":
-        raise ValueError(
-            f"Docker containers are not supported for TPU pod launcher currently, please remove the following flags:\n{bad_flags}"
-        )
+    # new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", "--tpu"]
+    # keys = "mixed_precision,fp16,num_processes,num_machines,module,no_python,main_training_function,downcast_bf16"
+    # for key in keys.split(","):
+    #     value = getattr(args, key)
+    #     if value is not None and value != False:
+    #         new_args.positional.append(f"--{key}")
+    #         if not isinstance(value, bool):
+    #             new_args.positional.append(str(value))
+
+    # new_args.positional.append(training_script)
+    # new_args.positional += training_script_args
+    # bad_flags = ""
+    # for arg in vars(new_args):
+    #     if arg.startswith("docker_"):
+    #         value = getattr(new_args, arg)
+    #         if value != "" and value is not None:
+    #             bad_flags += f'{arg}="{value}"\n'
+    # if bad_flags != "":
+    #     raise ValueError(
+    #         f"Docker containers are not supported for TPU pod launcher currently, please remove the following flags:\n{bad_flags}"
+    #     )
 
     with patch_environment(**current_env):
         try:
