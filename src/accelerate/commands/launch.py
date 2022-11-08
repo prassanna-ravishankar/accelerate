@@ -819,6 +819,7 @@ def tpu_launcher(args):
     sys.argv = [mod.__file__] + args.training_script_args
 
     main_function = getattr(mod, args.main_training_function)
+    print(f'Running: {current_env}, {main_function}, {args.num_processes}')
     with patch_environment(**current_env):
         xmp.spawn(PrepareForLaunch(main_function), args=(), nprocs=args.num_processes)
 
