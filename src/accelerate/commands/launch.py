@@ -837,6 +837,7 @@ def tpu_pod_launcher(args):
     )
     new_args.positional = ["accelerate", "launch"]
     print(args.__dict__)
+    raise ValueError()
     # for arg in vars(args):
 
     new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", training_script] + training_script_args
