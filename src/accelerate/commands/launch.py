@@ -836,7 +836,7 @@ def tpu_pod_launcher(args):
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
     new_args.positional = ["accelerate", "launch"]
-    print(args.__dict__)
+    print(dir(args))
     raise ValueError()
     # for arg in vars(args):
 
