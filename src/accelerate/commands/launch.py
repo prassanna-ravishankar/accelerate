@@ -836,17 +836,8 @@ def tpu_pod_launcher(args):
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
 
-    new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", "--tpu"]
-    keys = "mixed_precision,fp16,num_processes,num_machines,module,no_python,main_training_function,downcast_bf16"
-    for key in keys.split(","):
-        value = getattr(args, key)
-        if value is not None and value != False:
-            new_args.positional.append(f"--{key}")
-            if not isinstance(value, bool):
-                new_args.positional.append(str(value))
-
-    new_args.positional.append(training_script)
-    new_args.positional += training_script_args
+    new_args.positional = ["python3", training_script] + training_script_args
+    xrt_config = current_env.pop("XRT_TPU_CONFIG")
     bad_flags = ""
     for arg in vars(new_args):
         if arg.startswith("docker_"):
@@ -857,8 +848,9 @@ def tpu_pod_launcher(args):
         raise ValueError(
             f"Docker containers are not supported for TPU pod launcher currently, please remove the following flags:\n{bad_flags}"
         )
+    new_args.env = [f"{k}={v}" for k, v in current_env.items()]
 
-    with patch_environment(**current_env):
+    with patch_environment(xrt_tpu_config=xrt_config):
         try:
             xla_dist.resolve_and_execute(new_args)
         except:
