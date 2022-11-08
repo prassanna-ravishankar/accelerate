@@ -799,7 +799,6 @@ def tpu_launcher(args):
         raise ValueError("--no_python cannot be used with TPU launcher")
 
     args, current_env = prepare_tpu(args, current_env)
-    print(f'Training function: {args.main_training_function}')
 
     if args.module:
         mod_name = args.training_script
@@ -810,6 +809,8 @@ def tpu_launcher(args):
         mod_name = script_path.stem
 
     mod = importlib.import_module(mod_name)
+    print(type(args.main_training_function))
+    raise ValueError()
     if not hasattr(mod, args.main_training_function):
         raise ValueError(
             f"Your training script should have a function named {args.main_training_function}, or you should pass a "
@@ -836,7 +837,7 @@ def tpu_pod_launcher(args):
     args = _filter_args(
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
-    args.positional = ["accelerate", "launch", "--tpu", "--no_tpu_cluster", training_script] + training_script_args
+    args.positional = ["accelerate", "launch", "--tpu", "--no_tpu_cluster", "--main_training_function", "main", training_script] + training_script_args
     bad_flags = ""
     for arg in vars(args):
         if arg.startswith("docker_"):
