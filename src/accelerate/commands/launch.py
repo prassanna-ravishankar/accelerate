@@ -835,9 +835,10 @@ def tpu_pod_launcher(args):
     new_args = _filter_args(
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
-    print(f'New args: {vars(new_args)}')
-    print(f'Old args: {vars(args)}')
-    raise ValueError()
+    new_args.positional = ["accelerate", "launch"]
+    print(args.__dict__)
+    # for arg in vars(args):
+
     new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", training_script] + training_script_args
     bad_flags = ""
     for arg in vars(args):
