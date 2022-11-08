@@ -838,10 +838,10 @@ def tpu_pod_launcher(args):
     new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", "--tpu"]
     keys = "mixed_precision,fp16,num_processes,num_cpu_threads_per_process,module,no_python,main_training_function,downcast_bf16"
     for key in keys.split(","):
-        if getattr(args, key) is not None:
+        value = getattr(args, key)
+        if value is not None and value != False:
             new_args.positional.append(f"--{key}")
-            value = getattr(args, key)
-            if value is not False:
+            if value != True:
                 new_args.positional.append(str(value))
 
     new_args.positional.append(training_script)
