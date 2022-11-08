@@ -850,13 +850,13 @@ def tpu_pod_launcher(args):
         )
     new_args.env = [f"{k}={v}" for k, v in current_env.items()]
 
-    with patch_environment(xrt_tpu_config=xrt_config):
+    with patch_environment(xrt_tpu_config=xrt_config, fork_launched=1):
         try:
-            sys.argv = [xla_dist.__file__]
-            for var in vars(new_args):
-                sys.argv += [f'--{var}']
-                if getattr(new_args, var) is not None:
-                    sys.argv += [f'{getattr(new_args, var)}']
+            # sys.argv = [xla_dist.__file__]
+            # for var in vars(new_args):
+            #     sys.argv += [f'--{var}']
+            #     if getattr(new_args, var) is not None:
+            #         sys.argv += [f'{getattr(new_args, var)}']
             xla_dist.resolve_and_execute(new_args)
         except:
             if is_rich_available() and debug:
