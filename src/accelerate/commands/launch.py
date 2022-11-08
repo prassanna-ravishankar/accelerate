@@ -791,7 +791,6 @@ def deepspeed_launcher(args):
 
 
 def tpu_launcher(args):
-    print("Called TPU launcher")
     import torch_xla.distributed.xla_multiprocessing as xmp
 
     current_env = {}
