@@ -835,6 +835,7 @@ def tpu_pod_launcher(args):
     new_args = _filter_args(
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
+    new_args.env = [f"{key}={value}" for key, value in current_env.items()]
     new_args.positional = ["python3", training_script] + training_script_args
 
     # new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", "--tpu"]
@@ -859,16 +860,16 @@ def tpu_pod_launcher(args):
     #         f"Docker containers are not supported for TPU pod launcher currently, please remove the following flags:\n{bad_flags}"
     #     )
 
-    with patch_environment(**current_env):
-        try:
-            xla_dist.resolve_and_execute(new_args)
-        except:
-            if is_rich_available() and debug:
-                console = get_console()
-                console.print("\n[bold red]Using --debug, `torch_xla.xla_dist` Stack Trace:[/bold red]")
-                console.print_exception(suppress=[__file__], show_locals=False)
-            else:
-                raise
+    # with patch_environment(**current_env):
+    try:
+        xla_dist.resolve_and_execute(new_args)
+    except:
+        if is_rich_available() and debug:
+            console = get_console()
+            console.print("\n[bold red]Using --debug, `torch_xla.xla_dist` Stack Trace:[/bold red]")
+            console.print_exception(suppress=[__file__], show_locals=False)
+        else:
+            raise
 
 
 def _convert_nargs_to_dict(nargs: List[str]) -> Dict[str, str]:
