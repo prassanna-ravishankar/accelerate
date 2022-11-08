@@ -835,16 +835,21 @@ def tpu_pod_launcher(args):
     new_args = _filter_args(
         args, xla_dist.get_args_parser(), ["--tpu", args.tpu_name, "--positional", "", "--restart-tpuvm-pod-server"]
     )
-    new_args.positional = ["accelerate", "launch"]
-    print(dir(args.tpu))
-    raise ValueError()
-    # for arg in vars(args):
+    new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", "--tpu"]
+    keys = "mixed_precision,fp16,num_processes,num_cpu_threads_per_process,module,no_python,main_training_function,downcast_bf16"
+    for key in keys.split(","):
+        if getattr(args, key) is not None:
+            new_args.positional.append(f"--{key}")
+            value = getattr(args, key)
+            if value is not False:
+                new_args.positional.append(str(value))
 
-    new_args.positional = ["accelerate", "launch", "--no_tpu_cluster", training_script] + training_script_args
+    new_args.positional.append(training_script)
+    new_args.positional += training_script_args
     bad_flags = ""
-    for arg in vars(args):
+    for arg in vars(new_args):
         if arg.startswith("docker_"):
-            value = getattr(args, arg)
+            value = getattr(new_args, arg)
             if value != "" and value is not None:
                 bad_flags += f'{arg}="{value}"\n'
     if bad_flags != "":
@@ -854,7 +859,7 @@ def tpu_pod_launcher(args):
 
     with patch_environment(**current_env):
         try:
-            xla_dist.resolve_and_execute(args)
+            xla_dist.resolve_and_execute(new_args)
         except:
             if is_rich_available() and debug:
                 console = get_console()
