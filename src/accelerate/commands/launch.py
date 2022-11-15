@@ -855,6 +855,7 @@ def tpu_pod_launcher(args):
             f"Docker containers are not supported for TPU pod launcher currently, please remove the following flags:\n{bad_flags}"
         )
     new_args.env = [f"{k}={v}" for k, v in current_env.items()]
+    new_args.env.append("ACCELERATE_IN_TPU_POD=1")
     try:
         xla_dist.resolve_and_execute(new_args)
     except:
