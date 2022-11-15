@@ -849,7 +849,7 @@ def tpu_pod_launcher(args):
         "--no_tpu_cluster",
         "--tpu_child",
         "--num_processes",
-        args.num_processes,
+        str(args.num_processes),
         training_script,
     ] + training_script_args
     xrt_config = current_env.pop("XRT_TPU_CONFIG")
