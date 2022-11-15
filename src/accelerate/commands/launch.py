@@ -864,6 +864,7 @@ def tpu_pod_launcher(args):
             f"Docker containers are not supported for TPU pod launcher currently, please remove the following flags:\n{bad_flags}"
         )
     new_args.env = [f"{k}={v}" for k, v in current_env.items()]
+    print(new_args)
 
     with patch_environment(xrt_tpu_config=xrt_config):
         try:
