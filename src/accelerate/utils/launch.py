@@ -58,11 +58,14 @@ def prepare_tpu(args, current_env, pod=False):
             current_env["XLA_DOWNCAST_BF16"] = "1"
         else:
             current_env["XLA_USE_BF16"] = "1"
-    current_env["XRT_TPU_CONFIG"] = "localservice;0;localhost:51011"
     if pod:
         # Take explicit args and set them up for XLA
         args.vm = args.tpu_vm
         args.tpu = args.tpu_name
+    if not args.child:
+        # `xla_dist` will take care of this on pods
+        current_env["XRT_TPU_CONFIG"] = "localservice;0;localhost:51011"
+    delattr(args, "child")
     return args, current_env
 
 
