@@ -864,18 +864,15 @@ def tpu_pod_launcher(args):
             f"Docker containers are not supported for TPU pod launcher currently, please remove the following flags:\n{bad_flags}"
         )
     new_args.env = [f"{k}={v}" for k, v in current_env.items()]
-    print(new_args)
-
-    with patch_environment(xrt_tpu_config=xrt_config):
-        try:
-            xla_dist.resolve_and_execute(new_args)
-        except:
-            if is_rich_available() and debug:
-                console = get_console()
-                console.print("\n[bold red]Using --debug, `torch_xla.xla_dist` Stack Trace:[/bold red]")
-                console.print_exception(suppress=[__file__], show_locals=False)
-            else:
-                raise
+    try:
+        xla_dist.resolve_and_execute(new_args)
+    except:
+        if is_rich_available() and debug:
+            console = get_console()
+            console.print("\n[bold red]Using --debug, `torch_xla.xla_dist` Stack Trace:[/bold red]")
+            console.print_exception(suppress=[__file__], show_locals=False)
+        else:
+            raise
 
 
 def _convert_nargs_to_dict(nargs: List[str]) -> Dict[str, str]:
