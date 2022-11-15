@@ -51,6 +51,7 @@ def prepare_tpu(args, current_env, pod=False):
     """
     Prepares and returns an environment with the correct TPU environment variables.
     """
+    print(args)
     current_env["XLA_USE_BF16"] = "0"
     current_env["XLA_DOWNCAST_BF16"] = "0"
     if args.mixed_precision == "bf16":
