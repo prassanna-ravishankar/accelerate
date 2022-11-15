@@ -840,7 +840,6 @@ def tpu_pod_launcher(args):
         "accelerate-launch",
         "--tpu",
         "--no_tpu_cluster",
-        "--tpu_child",
         "--num_processes",
         str(args.num_processes),
         training_script,
