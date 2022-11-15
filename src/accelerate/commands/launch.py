@@ -304,6 +304,7 @@ def launch_command_parser(subparsers=None):
     )
     tpu_args.add_argument(
         "--tpu_child",
+        default=False,
         action="store_true",
         help="Whether this is a child process of a TPU pod.",
         dest="child",
