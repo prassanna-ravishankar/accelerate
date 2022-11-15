@@ -844,8 +844,7 @@ def tpu_pod_launcher(args):
     )
 
     new_args.positional = [
-        "accelerate",
-        "launch",
+        "accelerate-launch",
         "--tpu",
         "--no_tpu_cluster",
         "--tpu_child",
@@ -853,7 +852,6 @@ def tpu_pod_launcher(args):
         str(args.num_processes),
         training_script,
     ] + training_script_args
-    xrt_config = current_env.pop("XRT_TPU_CONFIG")
     bad_flags = ""
     for arg in vars(new_args):
         if arg.startswith("docker_"):
