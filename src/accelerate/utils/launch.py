@@ -51,7 +51,6 @@ def prepare_tpu(args, current_env, pod=False):
     """
     Prepares and returns an environment with the correct TPU environment variables.
     """
-    print(args)
     current_env["XLA_USE_BF16"] = "0"
     current_env["XLA_DOWNCAST_BF16"] = "0"
     if args.mixed_precision == "bf16":
@@ -63,7 +62,7 @@ def prepare_tpu(args, current_env, pod=False):
         # Take explicit args and set them up for XLA
         args.vm = args.tpu_vm
         args.tpu = args.tpu_name
-    if not args.child:
+    if not args.child and not pod:
         # `xla_dist` will take care of this on pods
         current_env["XRT_TPU_CONFIG"] = "localservice;0;localhost:51011"
     delattr(args, "child")
