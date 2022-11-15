@@ -62,7 +62,7 @@ def prepare_tpu(args, current_env, pod=False):
         # Take explicit args and set them up for XLA
         args.vm = args.tpu_vm
         args.tpu = args.tpu_name
-    if not args.child and not pod:
+    if not pod and not args.no_tpu_cluster:
         # `xla_dist` will take care of this on pods
         current_env["XRT_TPU_CONFIG"] = "localservice;0;localhost:51011"
     delattr(args, "child")

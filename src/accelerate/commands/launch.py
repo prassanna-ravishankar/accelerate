@@ -303,13 +303,6 @@ def launch_command_parser(subparsers=None):
         help="Whether to use a GCP TPU pod for training.",
     )
     tpu_args.add_argument(
-        "--tpu_child",
-        default=False,
-        action="store_true",
-        help="Whether this is a child process of a TPU pod.",
-        dest="child",
-    )
-    tpu_args.add_argument(
         "--vm",
         type=str,
         action="append",
