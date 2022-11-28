@@ -1018,10 +1018,7 @@ def launch_command(args):
                 ):
                     setattr(args, name, attr)
         if not args.mixed_precision:
-            if args.fp16:
-                args.mixed_precision = "fp16"
-            else:
-                args.mixed_precision = defaults.mixed_precision
+            args.mixed_precision = defaults.mixed_precision
         if args.dynamo_backend is None:
             warned.append("\t`--dynamo_backend` was set to a value of `'no'`")
             args.dynamo_backend = "no"
