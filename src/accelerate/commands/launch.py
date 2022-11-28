@@ -47,6 +47,7 @@ from accelerate.utils import (
 )
 from accelerate.utils.constants import DEEPSPEED_MULTINODE_LAUNCHERS
 from accelerate.utils.dataclasses import SageMakerDistributedType
+from accelerate.utils.deprecate import DeprecateAction
 from accelerate.utils.launch import env_var_path_add
 
 
@@ -162,8 +163,10 @@ def launch_command_parser(subparsers=None):
     hardware_args.add_argument(
         "--use_mps_device",
         default=False,
-        action="store_true",
-        help="This argument is deprecated, use `--mps` instead.",
+        action=DeprecateAction,
+        new_argument="--mps",
+        new_version="0.15.0",
+        store_true=True,
     )
 
     # Resource selection arguments
@@ -188,9 +191,11 @@ def launch_command_parser(subparsers=None):
     resource_args.add_argument(
         "--fp16",
         default=False,
-        action="store_true",
-        help="This argument is deprecated, use `--mixed_precision fp16` instead.",
-    )
+        action=DeprecateAction,
+        new_argument="--mixed_precision fp16",
+        new_version="0.15.0",
+        store_true=True,
+    ),
     resource_args.add_argument(
         "--num_processes", type=int, default=None, help="The total number of processes to be launched in parallel."
     )
