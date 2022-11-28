@@ -46,8 +46,9 @@ class DeprecateAction(argparse.Action):
     `version` if an argument is passed that should be deprecated
     """
 
-    def __init__(self, new_argument, new_version, store_true=False, **kwargs):
+    def __init__(self, new_argument, new_version, new_value=None, store_true=False, **kwargs):
         self.new_argument = new_argument
+        self.new_value = new_value
         self.deprecate_str = deprecate_value("This argument", f"`{new_argument}`", new_version, warn=False)
         kwargs["help"] = self.deprecate_str
         if store_true:
@@ -57,5 +58,8 @@ class DeprecateAction(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         deprecate_value(deprecate_str=self.deprecate_str)
-        setattr(namespace, self.new_argument, self.dest)
+        if self.new_value is not None:
+            setattr(namespace, self.new_argument, self.new_value)
+        else:
+            setattr(namespace, self.new_argument, self.dest)
         delattr(namespace, self.dest)

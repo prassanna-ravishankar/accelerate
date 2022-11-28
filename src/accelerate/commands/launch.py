@@ -192,7 +192,8 @@ def launch_command_parser(subparsers=None):
         "--fp16",
         default=False,
         action=DeprecateAction,
-        new_argument="--mixed_precision fp16",
+        new_argument="--mixed_precision",
+        new_value="fp16",
         new_version="0.15.0",
         store_true=True,
     ),
@@ -524,12 +525,6 @@ def simple_launcher(args):
 
     current_env = os.environ.copy()
     current_env["ACCELERATE_USE_CPU"] = str(args.cpu or args.use_cpu)
-    if args.use_mps_device:
-        warnings.warn(
-            '`use_mps_device` flag is deprecated and will be removed in version 0.15.0 of 🤗 Accelerate. Use "--mps" instead.',
-            FutureWarning,
-        )
-        args.mps = True
     current_env["ACCELERATE_USE_MPS_DEVICE"] = str(args.mps)
     if args.mps:
         current_env["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
@@ -548,13 +543,6 @@ def simple_launcher(args):
         raise ValueError(
             f"Unknown mixed_precision mode: {args.mixed_precision.lower()}. Choose between {PrecisionType.list()}."
         )
-
-    if args.fp16:
-        warnings.warn(
-            "`fp16` is deprecated and will be removed in version 0.15.0 of 🤗 Accelerate. Use `mixed_precision fp16` instead.",
-            FutureWarning,
-        )
-        mixed_precision = "fp16"
 
     current_env["ACCELERATE_MIXED_PRECISION"] = str(mixed_precision)
 
@@ -609,13 +597,6 @@ def multi_gpu_launcher(args):
         mixed_precision = PrecisionType(mixed_precision)
     except ValueError:
         raise ValueError(f"Unknown mixed_precision mode: {mixed_precision}. Choose between {PrecisionType.list()}.")
-
-    if args.fp16:
-        warnings.warn(
-            "`fp16` is deprecated and will be removed in version 0.15.0 of 🤗 Accelerate. Use `mixed_precision fp16` instead.",
-            FutureWarning,
-        )
-        mixed_precision = "fp16"
 
     current_env["ACCELERATE_MIXED_PRECISION"] = str(mixed_precision)
 
@@ -744,13 +725,6 @@ def deepspeed_launcher(args):
         raise ValueError(
             f"Unknown mixed_precision mode: {args.mixed_precision.lower()}. Choose between {PrecisionType.list()}."
         )
-
-    if args.fp16:
-        warnings.warn(
-            '--fp16 flag is deprecated and will be removed in version 0.15.0 of 🤗 Accelerate. Use "--mixed_precision fp16" instead.',
-            FutureWarning,
-        )
-        mixed_precision = "fp16"
 
     current_env["PYTHONPATH"] = env_var_path_add("PYTHONPATH", os.path.abspath("."))
     current_env["ACCELERATE_MIXED_PRECISION"] = str(mixed_precision)
@@ -917,10 +891,6 @@ def sagemaker_launcher(sagemaker_config: SageMakerConfig, args):
         raise ValueError(
             f"Unknown mixed_precision mode: {args.mixed_precision.lower()}. Choose between {PrecisionType.list()}."
         )
-
-    if args.fp16:
-        warnings.warn('--fp16 flag is deprecated. Use "--mixed_precision fp16" instead.', FutureWarning)
-        mixed_precision = "fp16"
 
     try:
         dynamo_backend = DynamoBackend(args.dynamo_backend.upper())
