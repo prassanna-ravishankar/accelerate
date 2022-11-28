@@ -49,6 +49,8 @@ class DeprecateAction(argparse.Action):
     def __init__(self, new_argument, new_version, new_value=None, store_true=False, **kwargs):
         self.new_argument = new_argument
         self.new_value = new_value
+        if new_value is not None:
+            new_argument = f"{new_argument}={new_value}"
         self.deprecate_str = deprecate_value("This argument", f"`{new_argument}`", new_version, warn=False)
         kwargs["help"] = self.deprecate_str
         self.deprecate_str = self.deprecate_str.replace("This argument", f'`{kwargs["option_strings"][0]}`')
