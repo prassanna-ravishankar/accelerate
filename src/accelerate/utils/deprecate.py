@@ -16,7 +16,7 @@ import argparse
 import warnings
 
 
-def deprecate_value(old, new, version, warn=True, deprecate_str=None):
+def deprecate_value(old=None, new=None, version=None, warn=True, deprecate_str=None):
     """
     Will raise a `DeprecationWarning` with a message saying that `old` is deprecated and will be removed in version
     `version`
