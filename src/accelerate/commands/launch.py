@@ -20,7 +20,6 @@ import logging
 import os
 import subprocess
 import sys
-import warnings
 from ast import literal_eval
 from pathlib import Path
 from typing import Dict, List

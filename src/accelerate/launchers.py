@@ -15,12 +15,12 @@
 import os
 import sys
 import tempfile
-import warnings
 
 import torch
 
 from .state import AcceleratorState
 from .utils import PrecisionType, PrepareForLaunch, patch_environment
+from .utils.deprecate import deprecate_value
 
 
 def notebook_launcher(function, args=(), num_processes=None, use_fp16=False, mixed_precision="no", use_port="29500"):
@@ -105,10 +105,7 @@ def notebook_launcher(function, args=(), num_processes=None, use_fp16=False, mix
                 )
 
             if use_fp16:
-                warnings.warn(
-                    "`fp16=True` is deprecated and will be removed in version 0.15.0 of 🤗 Accelerate. Use `mixed_precision='fp16'` instead.",
-                    FutureWarning,
-                )
+                deprecate_value("`fp16=True`", '`mixed_precision="fp16"`', "0.15.0")
                 mixed_precision = "fp16"
 
             # torch.distributed will expect a few environment variable to be here. We set the ones common to each

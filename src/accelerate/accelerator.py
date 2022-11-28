@@ -61,6 +61,7 @@ from .utils import (
     save,
     wait_for_everyone,
 )
+from .utils.deprecate import deprecate_value
 
 
 if is_deepspeed_available():
@@ -221,10 +222,7 @@ class Accelerator:
                 )
 
         if fp16:
-            warnings.warn(
-                "`fp16=True` is deprecated and will be removed in version 0.15.0 of 🤗 Accelerate. Use `mixed_precision='fp16'` instead.",
-                FutureWarning,
-            )
+            deprecate_value("`fp16=True`", '`mixed_precision="fp16"`', "0.15.0")
             mixed_precision = "fp16"
 
         if dynamo_backend is not None:

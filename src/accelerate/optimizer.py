@@ -13,12 +13,12 @@
 # limitations under the License.
 
 import inspect
-import warnings
 
 import torch
 
 from .state import AcceleratorState, GradientState
 from .utils import DistributedType, honor_type, is_torch_version, is_tpu_available
+from .utils.deprecate import deprecate_value
 
 
 if is_tpu_available(check_device=False):
@@ -146,11 +146,7 @@ class AcceleratedOptimizer(torch.optim.Optimizer):
     @property
     def is_overflow(self):
         """Whether or not the optimizer step was done, or skipped because of gradient overflow."""
-        warnings.warn(
-            "The `is_overflow` property is deprecated and will be removed in version 1.0 of Accelerate use "
-            "`optimizer.step_was_skipped` instead.",
-            FutureWarning,
-        )
+        deprecate_value("The `is_overflow` property", "`optimizer.step_was_skipped`", "1.0")
         return self._is_overflow
 
     @property
