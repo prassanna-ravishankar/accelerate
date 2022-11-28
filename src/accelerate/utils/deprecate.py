@@ -34,9 +34,9 @@ def deprecate_value(old=None, new=None, version=None, warn=True, deprecate_str=N
             f"{old} is deprecated and will be removed in version {version} of 🤗 Accelerate. Use {new} instead."
         )
     if warn:
-        warnings.simplefilter("always", DeprecationWarning)
-        warnings.warn(deprecate_str, category=DeprecationWarning, stacklevel=2)
-        warnings.simplefilter("default", DeprecationWarning)
+        warnings.simplefilter("always", FutureWarning)
+        warnings.warn(deprecate_str, category=FutureWarning, stacklevel=2)
+        warnings.simplefilter("default", FutureWarning)
     return deprecate_str
 
 
@@ -51,6 +51,7 @@ class DeprecateAction(argparse.Action):
         self.new_value = new_value
         self.deprecate_str = deprecate_value("This argument", f"`{new_argument}`", new_version, warn=False)
         kwargs["help"] = self.deprecate_str
+        self.deprecate_str = self.deprecate_str.replace("This argument", f'`{kwargs["option_strings"][0]}`')
         if store_true:
             kwargs["const"] = True
             kwargs["nargs"] = 0
