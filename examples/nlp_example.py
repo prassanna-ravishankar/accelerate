@@ -133,7 +133,7 @@ def training_function(config, args):
     # Prepare everything
     # There is no specific order to remember, we just need to unpack the objects in the same order we gave them to the
     # prepare method.
-    
+
     model, optimizer, train_dataloader, eval_dataloader, lr_scheduler = accelerator.prepare(
         model, optimizer, train_dataloader, eval_dataloader, lr_scheduler
     )
